@@ -26,42 +26,24 @@ public class BookController {
     @Autowired
     private BookServices bookService;
     @Autowired
-    private List<Book> books;
-    @Autowired
     private CategoryService categoryService;
-
-
-
-//    @GetMapping
-//    public String listBooks(Model model){
-//        model.addAttribute("books", books);
-//        model.addAttribute("title","Book List");
-//        return "book/list";
-//    }
-
     @GetMapping
-    public String showAllBooks(Model model){
-        List<Book> books=bookService.getAllBooks();
-        model.addAttribute("books",books);
+    public String showAllBooks(Model model) {
+        List<Book> books = bookService.getAllBooks();
+        model.addAttribute("books", books);
         return "book/list";
     }
 
     @GetMapping("/add")
-    public String addBookForm(Model model){
+    public String addBookForm(Model model) {
         model.addAttribute("book", new Book());
         model.addAttribute("categories", categoryService.getAllCategories());
         return "book/add";
     }
 
     @PostMapping("/add")
-    public String addBook(@ModelAttribute("book")Book book){
-        bookService.addBook(book);
-        return "redirect:/books";
-    }
-
-    @PostMapping("/add")
-    public String addBook(@Valid @ModelAttribute("book") Book book, BindingResult bindingResult, Model model){
-        if (bindingResult.hasErrors()){
+    public String addBook(@ModelAttribute("book") Book book, BindingResult bindingResult, Model model) {
+        if(bindingResult.hasErrors()){
             model.addAttribute("categories", categoryService.getAllCategories());
             return "book/add";
         }
@@ -69,29 +51,24 @@ public class BookController {
         return "redirect:/books";
     }
 
-
     @GetMapping("/edit/{id}")
     public String editBookForm(@PathVariable("id") Long id, Model model){
-        Optional<Book> editBook = books.stream()
-               // .filter(book -> book.getId().equals(id))
-                .findFirst();
-        if (editBook.isPresent()){
-            model.addAttribute("book", editBook.get());
-            return "book/edit";
-        }else {
-            return "not-found";
-        }
+        Book book = bookService.getBookById(id);
+        model.addAttribute("book", book);
+        model.addAttribute("categories", categoryService.getAllCategories());
+        return "book/edit";
     }
 
-    @PostMapping("/edit")
-    public String editBook(@ModelAttribute("book") Book updatedBook){
-        books.stream().filter(book -> book.getId() == updatedBook.getId()).findFirst().ifPresent(book -> books.set(books.indexOf(book),updatedBook));
+    @PostMapping("/edit/{id}")
+    public String editBook(@PathVariable("id") Long id, @ModelAttribute("book") Book book){
+        book.setId(id);
+        bookService.updateBook(book);
         return "redirect:/books";
     }
 
     @GetMapping("/delete/{id}")
     public String deleteBook(@PathVariable("id") Long id){
-        books.removeIf(book -> book.getId().equals(id));
+        bookService.deleteBook(id);
         return "redirect:/books";
     }
 }

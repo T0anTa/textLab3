@@ -12,6 +12,7 @@ public class BookServices {
     @Autowired
     private IBookRepository bookRepository;
 
+
     public List<Book> getAllBooks(){
         return bookRepository.findAll();
     }
@@ -26,5 +27,10 @@ public class BookServices {
 
     public void deleteBook(Long id){
         bookRepository.deleteById(id);
+    }
+
+    public void updateBook (Book book)
+    {
+        bookRepository.save(book);
     }
 }
