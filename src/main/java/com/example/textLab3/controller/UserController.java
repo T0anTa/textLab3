@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.List;
+//import java.util.List;
 
 @Controller
 public class UserController {
@@ -33,11 +33,17 @@ public class UserController {
     public String register(@Valid @ModelAttribute("user") User user,
                            BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-            List<FieldError> errors = bindingResult.getFieldErrors();
-            for (FieldError error : errors) {
-                model.addAttribute(error.getField() + "_error",
-                        error.getDefaultMessage());
-            }
+//            List<FieldError> errors = bindingResult.getFieldErrors();
+//            for (FieldError error : errors) {
+//                model.addAttribute(error.getField() + "_error",
+//                        error.getDefaultMessage());
+//            }
+//            return "user/register";
+
+            bindingResult.getFieldErrors().forEach(error
+                    -> model.addAttribute(error.getField()+"_error", error.getDefaultMessage()));
+
+
             return "user/register";
         }
         user.setPassword(new

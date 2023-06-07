@@ -17,6 +17,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 public @interface ValidCategoryId {
     String message() default "Invalid Category ID";
-    Class<?>[] groups()default {};
+    Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

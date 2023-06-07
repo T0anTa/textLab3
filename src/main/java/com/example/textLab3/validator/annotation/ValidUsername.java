@@ -19,5 +19,5 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface ValidUsername {
     String message() default "Username already exists";
     Class<?>[] groups() default {};
-    Class<? extends Payload>[] payload()   default {};
+    Class<? extends Payload>[] payload()  default {};
 }

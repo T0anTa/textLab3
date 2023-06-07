@@ -3,21 +3,36 @@ package com.example.textLab3.entity;
 
 import com.example.textLab3.repostitory.IUserRepository;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.stream.Collectors;
 
 public class CustomUserDetail implements UserDetails {
     private final User user;
+    private final IUserRepository userRepository;
+
     public CustomUserDetail(User user, IUserRepository userRepository){
         this.user = user;
+        this.userRepository =userRepository;
     }
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.emptyList();
+    public Collection<? extends GrantedAuthority> getAuthorities(){
+        return Arrays.stream(userRepository.getRolesOfUser(user.getId()))
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toSet());
     }
+
+
+
+//    @Override
+//    public Collection<? extends GrantedAuthority> getAuthorities() {
+//        return Collections.emptyList();
+//    }
 
     @Override
     public String getPassword() {
@@ -48,4 +63,7 @@ public class CustomUserDetail implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+    
+    
 }
+
